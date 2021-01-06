@@ -1,35 +1,33 @@
 import React from 'react'
 import CSS from 'csstype'
-
-// Type Declaration
-export type Question = {
-  category : string
-  type : string
-  difficulty : string
-  question : string
-  correct_answer : string
-  incorrect_answers : [string]
-}
+import { Question } from './Question'
 
 const styles: {[ key: string ] : CSS.Properties } = {
   buttonStyle: {
-    flexShrink: 1,
-    minWidth: '50px'
+    flexShrink: 0,
+    marginLeft: '5px'
   },
   questionText: {
     flexGrow: 1,
     minWidth: '50px'
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    maxWidth: '500px',
+    margin: '10px'
   }
 }
 
-export const QuestionPreview = ({ question }: { question: Question }) => {
+type QuestionPreviewProps = {
+  question: Question
+  questionSelectionHandler: (question: Question) => void
+}
+
+export const QuestionPreview = ({ question, questionSelectionHandler }: QuestionPreviewProps) => {
   return (
     <div style={styles.container}>
       <span style={styles.questionText}>{question.question}</span>
-      <button style={styles.buttonStyle}>Answer</button>
+      <button style={styles.buttonStyle} onClick={() => questionSelectionHandler(question)}>Answer</button>
     </div>
   )
 }

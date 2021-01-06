@@ -1,5 +1,6 @@
 const DemoQuestions = [
   {
+    id: "001",
     category: "Mythology",
     type: "multiple",
     difficulty: "hard",
@@ -9,6 +10,7 @@ const DemoQuestions = [
     incorrect_answers: ["Sardinia", "Sicily", "Cyprus"],
   },
   {
+    id: "002",
     category: "Mythology",
     type: "multiple",
     difficulty: "easy",
@@ -18,6 +20,7 @@ const DemoQuestions = [
     incorrect_answers: ["Demeter", "Zeus", "Athena"],
   },
   {
+    id: "003",
     category: "Mythology",
     type: "multiple",
     difficulty: "medium",
@@ -26,6 +29,7 @@ const DemoQuestions = [
     incorrect_answers: ["Ares", "Zeus", "Apollo"],
   },
   {
+    id: "004",
     category: "Mythology",
     type: "multiple",
     difficulty: "hard",
@@ -35,6 +39,7 @@ const DemoQuestions = [
     incorrect_answers: ["Bragi", "Odin", "Ymir"],
   },
   {
+    id: "005",
     category: "Mythology",
     type: "multiple",
     difficulty: "medium",
@@ -43,6 +48,7 @@ const DemoQuestions = [
     incorrect_answers: ["Cow", "Horse", "Eagle"],
   },
   {
+    id: "006",
     category: "Mythology",
     type: "boolean",
     difficulty: "medium",
@@ -52,6 +58,7 @@ const DemoQuestions = [
     incorrect_answers: ["False"],
   },
   {
+    id: "007",
     category: "Mythology",
     type: "multiple",
     difficulty: "easy",
@@ -64,6 +71,7 @@ const DemoQuestions = [
     ],
   },
   {
+    id: "008",
     category: "Mythology",
     type: "multiple",
     difficulty: "medium",
@@ -73,6 +81,7 @@ const DemoQuestions = [
     incorrect_answers: ["Wild dog", "Monkey", "Crocodile"],
   },
   {
+    id: "009",
     category: "Mythology",
     type: "boolean",
     difficulty: "hard",
@@ -81,6 +90,7 @@ const DemoQuestions = [
     incorrect_answers: ["False"],
   },
   {
+    id: "010",
     category: "Mythology",
     type: "multiple",
     difficulty: "medium",
