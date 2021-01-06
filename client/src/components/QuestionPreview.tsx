@@ -1,6 +1,8 @@
 import React from 'react'
+import CSS from 'csstype'
 
-export type IQuestion = {
+// Type Declaration
+export type Question = {
   category : string
   type : string
   difficulty : string
@@ -9,13 +11,25 @@ export type IQuestion = {
   incorrect_answers : [string]
 }
 
-type QuestionPreviewProps = { question: IQuestion }
+const styles: {[ key: string ] : CSS.Properties } = {
+  buttonStyle: {
+    flexShrink: 1,
+    minWidth: '50px'
+  },
+  questionText: {
+    flexGrow: 1,
+    minWidth: '50px'
+  },
+  container: {
+    display: 'flex'
+  }
+}
 
-export const QuestionPreview = ({ question }: QuestionPreviewProps) => {
+export const QuestionPreview = ({ question }: { question: Question }) => {
   return (
-    <ul>
-      <li>{question.category}</li>
-      <li>{question.question}</li>
-    </ul>
+    <div style={styles.container}>
+      <span style={styles.questionText}>{question.question}</span>
+      <button style={styles.buttonStyle}>Answer</button>
+    </div>
   )
 }

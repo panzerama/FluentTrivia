@@ -1,5 +1,5 @@
 import React from 'react'
-import { QuestionPreview, IQuestion } from './components/QuestionPreview'
+import { QuestionPreview, Question } from './components/QuestionPreview'
 import { DemoQuestions } from './mockData/DemoQuestions'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <div>
       <button>Practice Mode</button>
       {questions.map((question) => { 
-        return <QuestionPreview question={question as IQuestion}/>
+        return <QuestionPreview question={question as Question}/>
       })}
     </div>
   );
