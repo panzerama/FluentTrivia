@@ -1,9 +1,16 @@
 import React from "react";
-import { Header } from "./components/Header";
+import Header from './components/Header'
 import { QuestionPreview } from "./components/QuestionPreview";
 import { QuestionDisplay } from "./components/QuestionDisplay";
 import { Question } from "./components/Question";
 import { DemoQuestions } from "./mockData/DemoQuestions";
+
+
+// colors
+// purple: 54577c
+// dark green: 9aa899
+// light green: ecffb0
+// light yellow: faffd8
 
 function App() {
   const [questions, setQuestions] = React.useState(DemoQuestions);
@@ -12,24 +19,12 @@ function App() {
   const questionDisplay = currentQuestion ? (
     <QuestionDisplay question={currentQuestion} />
   ) : (
-    ""
-  );
+      ""
+    );
 
   return (
-    <div className="container">
+    <div>
       <Header />
-      <div>
-        <button>Practice Mode</button>
-        {questionDisplay}
-        {questions.map((question) => {
-          return (
-            <QuestionPreview
-              question={question as Question}
-              questionSelectionHandler={setCurrentQuestion}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 }
