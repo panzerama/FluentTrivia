@@ -14,34 +14,10 @@ const useStyles = makeStyles({
   root: {
     minWidth: 275,
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
   title: {
     fontSize: 14,
   },
-  pos: {
-    marginBottom: 12,
-  },
 });
-
-const styles: {[ key: string ] : CSS.Properties } = {
-  buttonStyle: {
-    flexShrink: 0,
-    marginLeft: '5px'
-  },
-  questionText: {
-    flexGrow: 1,
-    minWidth: '50px'
-  },
-  container: {
-    display: 'flex',
-    maxWidth: '500px',
-    margin: '10px'
-  }
-}
 
 type QuestionPreviewProps = {
   question: Question
