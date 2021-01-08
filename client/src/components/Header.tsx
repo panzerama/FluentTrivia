@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => createStyles({
 const Header = () => {
   const classes = useStyles();
   return (
-    <AppBar className={classes.root}>
+    <AppBar className={classes.root} position='static'>
       <Toolbar>
         <IconButton edge="start" color="inherit" aria-label="menu">
           <MenuIcon />

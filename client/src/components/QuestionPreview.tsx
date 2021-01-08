@@ -1,6 +1,31 @@
 import React from 'react'
 import CSS from 'csstype'
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+  makeStyles
+} from '@material-ui/core'
 import { Question } from './Question'
+
+const useStyles = makeStyles({
+  root: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+});
 
 const styles: {[ key: string ] : CSS.Properties } = {
   buttonStyle: {
@@ -24,10 +49,17 @@ type QuestionPreviewProps = {
 }
 
 export const QuestionPreview = ({ question, questionSelectionHandler }: QuestionPreviewProps) => {
+  const classes = useStyles();
   return (
-    <div style={styles.container}>
-      <span style={styles.questionText}>{question.question}</span>
-      <button style={styles.buttonStyle} onClick={() => questionSelectionHandler(question)}>Answer</button>
-    </div>
+    <Card className={classes.root}>
+      <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          {question.question}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button onClick={() => questionSelectionHandler(question)}>Answer</Button>
+      </CardActions>
+    </Card>
   )
 }
