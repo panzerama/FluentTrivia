@@ -9,7 +9,7 @@ import {
   ListItem
 } from "@material-ui/core";
 
-import { Question } from "./Question";
+import { Question } from "../types/Question";
 
 /* workitem: do i need to export the props types? */
 export type QuestionDisplayProps = {

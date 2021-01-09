@@ -1,5 +1,5 @@
 import React from 'react'
-import CSS from 'csstype'
+
 import {
   Card,
   CardContent,
@@ -8,7 +8,8 @@ import {
   Button,
   makeStyles
 } from '@material-ui/core'
-import { Question } from './Question'
+
+import { Question } from '../types/Question'
 
 const useStyles = makeStyles({
   root: {

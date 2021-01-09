@@ -5,11 +5,11 @@ import { Container, Grid, Button } from "@material-ui/core";
 import Header from "./components/Header";
 import { QuestionPreview } from "./components/QuestionPreview";
 import { QuestionDisplay } from "./components/QuestionDisplay";
-import { Question } from "./components/Question";
+import { Question } from "./types/Question";
 import { DemoQuestions } from "./mockData/DemoQuestions";
 
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Colors from "./styles/Colors";
+import Colors from "./constants/Colors";
 
 const useStyles = makeStyles(() =>
   createStyles({
