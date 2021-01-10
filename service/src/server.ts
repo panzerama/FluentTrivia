@@ -4,6 +4,8 @@ import parser from 'body-parser'
 const app: express.Application = express()
 app.use(parser.json())
 
+// Dependencies
+
 // get questions
 app.get('/questions', (req, res) => { 
   res.send('Hello world!')
