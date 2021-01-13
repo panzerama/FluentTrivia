@@ -86,6 +86,10 @@ class QuestionsProvider {
 
     return questions;
   }
+
+  answerQuestion(question_id: String, response: String): Boolean {
+    return false;
+  }
 }
 
 export default QuestionsProvider;

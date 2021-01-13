@@ -1,2 +1,4 @@
 .eslintcache
-dist/
+**/dist
+**/node_modules
+.env
