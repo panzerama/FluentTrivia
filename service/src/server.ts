@@ -9,24 +9,31 @@ app.use(parser.json())
 // Dependencies
 const questionsProvider = new QuestionProvider();
 
-// get questions
-app.get('/questions', async (req, res) => { 
-  const questions = await questionsProvider.getQuestionSet();
+// start new session
+app.get('/start', async (req, res) => {
+  const questions = await questionsProvider.startQuestionSet();
   res.status(200);
   res.json(questions);
   res.end();
-})
+});
+
+// get questions
+app.get('/questions', (req, res) => {
+  res.status(501);
+  res.json({ error: "Not implemented" });
+  res.end();
+});
 
 // answer question
-app.post('/question/:id', (req, res) => {
+app.post('/question/:id', (req, res, next) => {
   try {
     const answer = questionsProvider.answerQuestion(req.params.id, req.body.json());
     res.status(200);
     res.json({ result: answer });
-  } catch {
-    res.status(400);
+    res.end();
+  } catch (err) {
+    next(err)
   }
-  res.end();
 })
 
 app.listen(4000)

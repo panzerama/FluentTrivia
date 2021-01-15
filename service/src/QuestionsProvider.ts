@@ -57,13 +57,11 @@ class QuestionsProvider {
 
   constructor() {}
 
-  async getQuestionSet(): Promise<IQuestion[]> {
-    if (!this.sessionToken) {
-      const sessionTokenResponse = await axios.get(
-        "https://opentdb.com/api_token.php?command=request"
-      );
-      this.sessionToken = sessionTokenResponse.data.token;
-    }
+  async startQuestionSet(): Promise<IQuestion[]> {
+    const sessionTokenResponse = await axios.get(
+      "https://opentdb.com/api_token.php?command=request"
+    );
+    this.sessionToken = sessionTokenResponse.data.token;
 
     await mongoose
       .connect(connectionString, {
@@ -71,6 +69,8 @@ class QuestionsProvider {
         useNewUrlParser: true,
       })
       .catch((err) => console.log(err));
+    
+    await QuestionModel.deleteMany({});
 
     const triviaApiUrl = `https://opentdb.com/api.php?amount=15&category=18&token=${this.sessionToken}`;
 
