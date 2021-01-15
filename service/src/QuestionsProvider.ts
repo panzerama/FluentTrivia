@@ -55,7 +55,7 @@ const connectionString = `mongodb+srv://jonas:${password}@cluster0.49ssl.mongodb
 class QuestionsProvider {
   private sessionToken: string | null = null;
 
-  constructor() {}
+  constructor() {} // workitem do i need a constructor if it is empty?
 
   async startQuestionSet(): Promise<IQuestion[]> {
     const sessionTokenResponse = await axios.get(
@@ -87,7 +87,12 @@ class QuestionsProvider {
     return questions;
   }
 
-  answerQuestion(question_id: String, response: String): Boolean {
+  answerQuestion(question_id: String, answer: String): Boolean | Error {
+    console.log(question_id);
+    QuestionModel.findOne({ question_id: question_id }, (err: Error, doc: IQuestion) => {
+      if (err) { return err }
+      return doc.correct_answer == answer;
+    })
     return false;
   }
 }

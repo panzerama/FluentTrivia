@@ -27,7 +27,7 @@ app.get('/questions', (req, res) => {
 // answer question
 app.post('/question/:id', (req, res, next) => {
   try {
-    const answer = questionsProvider.answerQuestion(req.params.id, req.body.json());
+    const answer = questionsProvider.answerQuestion(req.params.id, req.body.answer);
     res.status(200);
     res.json({ result: answer });
     res.end();
