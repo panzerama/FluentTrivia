@@ -29,7 +29,7 @@ app.post('/question/:id', async (req, res, next) => {
   try {
     const answer: AnswerResponse = await questionsProvider.answerQuestion(req.params.id, req.body.answer);
     res.status(200);
-    res.json(JSON.stringify(answer));
+    res.json(answer);
     res.end();
   } catch (err) {
     next(err)
