@@ -3,11 +3,11 @@ import { resolve } from "path";
 
 config({ path: resolve(__dirname, "../.env") });
 
-import mongoose from "mongoose";
+import mongoose, { model, Model, Document, Schema } from "mongoose";
 import axios from "axios";
 
-interface IQuestion extends mongoose.Document {
-  question_id?: string;
+interface IQuestion extends Document {
+  _id?: Number;
   category: string;
   type: string;
   difficulty: string;
@@ -16,7 +16,11 @@ interface IQuestion extends mongoose.Document {
   incorrect_answers: [string];
 }
 
-const questionSchema = new mongoose.Schema({
+const questionSchema: Schema = new Schema({
+  _id: {
+    type: Number,
+    required: true
+  },
   category: {
     type: String,
     required: true,
@@ -43,7 +47,12 @@ const questionSchema = new mongoose.Schema({
   },
 });
 
-const QuestionModel = mongoose.model("Question", questionSchema);
+export interface AnswerResponse {
+  question: IQuestion,
+  result: string
+}
+
+const QuestionModel = model<IQuestion>("Question", questionSchema);
 
 const password = process.env.MONGODB_PASSWORD ?? "";
 const connectionString = `mongodb+srv://jonas:${password}@cluster0.49ssl.mongodb.net/emerald?retryWrites=true&w=majority`;
@@ -75,19 +84,19 @@ class QuestionsProvider {
     const triviaApiUrl = `https://opentdb.com/api.php?amount=15&category=18&token=${this.sessionToken}`;
 
     const questionResponse = await axios.get(triviaApiUrl);
-    const questions = questionResponse.data.results.map((question: IQuestion, index: Number) => {
-      question.question_id = `${index}`;
-      return question;
-    });
-
-    questions.forEach(async (question: IQuestion) => {
-      await QuestionModel.create(question);
+    const questions = questionResponse.data.results.map(async (question: IQuestion, index: Number) => {
+      let newQuestion: IQuestion = question;
+      newQuestion._id = index;
+      await QuestionModel.create(newQuestion).catch((err) => {
+        console.log(err);
+      });
+      return newQuestion;
     });
 
     return questions;
   }
 
-  async answerQuestion(question_id: String, answer: String): Promise<Boolean | Error> {
+  async answerQuestion(question_id: string, answer: string): Promise<AnswerResponse> {
     await mongoose
       .connect(connectionString, {
         useUnifiedTopology: true,
@@ -95,10 +104,14 @@ class QuestionsProvider {
       })
       .catch((err) => console.log(err));
 
-    console.log(question_id);
-    const question = await QuestionModel.findOne({ question_id: question_id }).exec()
-    console.log(question);
-    return false;
+    const question = await QuestionModel.findById(question_id).exec() as IQuestion
+
+    const answerResponse = {
+      question: question,
+      result: question.correct_answer === answer ? "correct" : "incorrect"
+    }
+    
+    return answerResponse;
   }
 }
 

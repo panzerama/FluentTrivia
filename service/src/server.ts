@@ -1,6 +1,6 @@
 import express from 'express'
 import parser from 'body-parser'
-import QuestionProvider from './QuestionsProvider'
+import QuestionProvider, {AnswerResponse} from './QuestionsProvider'
 import { resolveTripleslashReference } from 'typescript'
 
 const app: express.Application = express()
@@ -25,11 +25,11 @@ app.get('/questions', (req, res) => {
 });
 
 // answer question something
-app.post('/question/:id', (req, res, next) => {
+app.post('/question/:id', async (req, res, next) => {
   try {
-    const answer = questionsProvider.answerQuestion(req.params.id, req.body.answer);
+    const answer: AnswerResponse = await questionsProvider.answerQuestion(req.params.id, req.body.answer);
     res.status(200);
-    res.json({ result: answer });
+    res.json(JSON.stringify(answer));
     res.end();
   } catch (err) {
     next(err)

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src -e ts --exec npm start",
+    "dev": "nodemon --watch src --delay 5 -e ts --exec npm start",
     "start": "tsc && node dist/server.js"
   },
   "author": "",
