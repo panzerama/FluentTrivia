@@ -9,7 +9,7 @@ app.use(parser.json())
 // Dependencies
 const questionsProvider = new QuestionProvider();
 
-// start new session
+// start new session and clear stored questions
 app.get('/start', async (req, res) => {
   const questions = await questionsProvider.startQuestionSet();
   res.status(200);
@@ -17,14 +17,14 @@ app.get('/start', async (req, res) => {
   res.end();
 });
 
-// get questions
+// get current question set
 app.get('/questions', (req, res) => {
   res.status(501);
   res.json({ error: "Not implemented" });
   res.end();
 });
 
-// answer question
+// answer question something
 app.post('/question/:id', (req, res, next) => {
   try {
     const answer = questionsProvider.answerQuestion(req.params.id, req.body.answer);

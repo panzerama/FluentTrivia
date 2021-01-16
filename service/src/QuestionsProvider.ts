@@ -87,12 +87,17 @@ class QuestionsProvider {
     return questions;
   }
 
-  answerQuestion(question_id: String, answer: String): Boolean | Error {
+  async answerQuestion(question_id: String, answer: String): Promise<Boolean | Error> {
+    await mongoose
+      .connect(connectionString, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+      })
+      .catch((err) => console.log(err));
+
     console.log(question_id);
-    QuestionModel.findOne({ question_id: question_id }, (err: Error, doc: IQuestion) => {
-      if (err) { return err }
-      return doc.correct_answer == answer;
-    })
+    const question = await QuestionModel.findOne({ question_id: question_id }).exec()
+    console.log(question);
     return false;
   }
 }
