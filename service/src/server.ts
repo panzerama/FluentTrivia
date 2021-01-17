@@ -1,6 +1,6 @@
 import express from 'express'
 import parser from 'body-parser'
-import QuestionProvider, {AnswerResponse} from './QuestionsProvider'
+import QuestionProvider, { AnswerResponse } from './QuestionsProvider'
 import { resolveTripleslashReference } from 'typescript'
 
 const app: express.Application = express()

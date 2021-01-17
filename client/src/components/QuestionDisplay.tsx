@@ -6,10 +6,12 @@ import {
   Typography,
   makeStyles,
   List,
-  ListItem
+  ListItem,
+  Button
 } from "@material-ui/core";
 
 import { Question } from "../types/Question";
+import { FullscreenExitTwoTone } from "@material-ui/icons";
 
 /* workitem: do i need to export the props types? */
 export type QuestionDisplayProps = {
@@ -29,6 +31,10 @@ const useStyles = makeStyles({
   title: {
     fontSize: 14,
   },
+  list: {
+    display: 'flex',
+    flexDirection: 'row'
+  }
 });
 
 export const QuestionDisplay = ({
@@ -79,9 +85,9 @@ export const QuestionDisplay = ({
       <Typography className={classes.title} gutterBottom>
           {question.question}
         </Typography>
-        <List>
+        <List className={classes.list}>
           {randomizedAnswers.map((answer) => {
-            return <ListItem>{answer.description}</ListItem>
+            return <ListItem><Button variant="contained">{answer.description}</Button></ListItem>
           })}
         </List>
       </CardContent>
