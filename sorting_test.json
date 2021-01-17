@@ -1,0 +1,279 @@
+[
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Central Processing Unit",
+                "Hard Disk Drive",
+                "Random Access Memory"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "easy",
+            "question": "Which computer hardware device provides an interface for all other connected devices to communicate?",
+            "correct_answer": "Motherboard"
+        },
+        "_id": 1,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "False"
+            ],
+            "category": "Science: Computers",
+            "type": "boolean",
+            "difficulty": "easy",
+            "question": "Linus Torvalds created Linux and Git.",
+            "correct_answer": "True"
+        },
+        "_id": 2,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Paint.NET",
+                "GIMP",
+                "Adobe Photoshop"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "medium",
+            "question": "All of the following programs are classified as raster graphics editors EXCEPT:",
+            "correct_answer": "Inkscape"
+        },
+        "_id": 3,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Intel 486SX",
+                "TMS 1000",
+                "AMD AM386"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "medium",
+            "question": "What was the first commerically available computer processor?",
+            "correct_answer": "Intel 4004"
+        },
+        "_id": 4,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Content Distribution Network",
+                "Computational Data Network",
+                "Compressed Data Network"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "medium",
+            "question": "What does the acronym CDN stand for in terms of networking?",
+            "correct_answer": "Content Delivery Network"
+        },
+        "_id": 5,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "False"
+            ],
+            "category": "Science: Computers",
+            "type": "boolean",
+            "difficulty": "medium",
+            "question": "It&#039;s not possible to format a write-protected DVD-R Hard Disk.",
+            "correct_answer": "True"
+        },
+        "_id": 8,
+        "last_answer_correct": false,
+        "correct_attempts": 0,
+        "incorrect_attempts": 5,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Neptune",
+                "Whistler",
+                "Bliss"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "hard",
+            "question": "What is the name of the default theme that is installed with Windows XP?",
+            "correct_answer": "Luna"
+        },
+        "_id": 6,
+        "last_answer_correct": false,
+        "correct_attempts": 0,
+        "incorrect_attempts": 5,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "True"
+            ],
+            "category": "Science: Computers",
+            "type": "boolean",
+            "difficulty": "hard",
+            "question": "DHCP stands for Dynamic Host Configuration Port.",
+            "correct_answer": "False"
+        },
+        "_id": 7,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "CompuServe",
+                "Prodigy",
+                "GEnie"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "hard",
+            "question": "America Online (AOL) started out as which of these online service providers?",
+            "correct_answer": "Quantum Link"
+        },
+        "_id": 9,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Android",
+                "BlackBerry",
+                "Symbian"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "easy",
+            "question": "This mobile OS held the largest market share in 2012.",
+            "correct_answer": "iOS"
+        },
+        "_id": 10,
+        "last_answer_correct": true,
+        "correct_attempts": 3,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Impact printer",
+                "Daisywheel printer",
+                "Dot matrix printer"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "medium",
+            "question": "Laserjet and inkjet printers are both examples of what type of printer?",
+            "correct_answer": "Non-impact printer"
+        },
+        "_id": 11,
+        "last_answer_correct": true,
+        "correct_attempts": 3,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "True"
+            ],
+            "category": "Science: Computers",
+            "type": "boolean",
+            "difficulty": "medium",
+            "question": "Linus Sebastian is the creator of the Linux kernel, which went on to be used in Linux, Android, and Chrome OS.",
+            "correct_answer": "False"
+        },
+        "_id": 12,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "FM Synthesizer",
+                "Programmable Sound Generator (PSG)",
+                "PCM Sampler"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "hard",
+            "question": "What type of sound chip does the Super Nintendo Entertainment System (SNES) have?",
+            "correct_answer": "ADPCM Sampler"
+        },
+        "_id": 14,
+        "last_answer_correct": null,
+        "correct_attempts": 0,
+        "incorrect_attempts": 0,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "Assembly",
+                "C#",
+                "ECMAScript"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "hard",
+            "question": "What major programming language does Unreal Engine 4 use?",
+            "correct_answer": "C++"
+        },
+        "_id": 13,
+        "last_answer_correct": false,
+        "correct_attempts": 0,
+        "incorrect_attempts": 3,
+        "__v": 0
+    },
+    {
+        "trivia": {
+            "incorrect_answers": [
+                "C#",
+                "Ruby",
+                "C++"
+            ],
+            "category": "Science: Computers",
+            "type": "multiple",
+            "difficulty": "easy",
+            "question": "The programming language &#039;Swift&#039; was created to replace what other programming language?",
+            "correct_answer": "Objective-C"
+        },
+        "_id": 0,
+        "last_answer_correct": true,
+        "correct_attempts": 1,
+        "incorrect_attempts": 0,
+        "__v": 0
+    }
+]

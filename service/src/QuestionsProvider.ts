@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 config({ path: resolve(__dirname, "../.env") });
 
-import mongoose, { model, Model, Document, Schema } from "mongoose";
+import mongoose, { model, Document, Schema } from "mongoose";
 import axios from "axios";
 import { isImportEqualsDeclaration } from "typescript";
 
@@ -20,8 +20,9 @@ interface Trivia {
 interface IQuestion extends Document {
   _id?: number;
   trivia: Trivia;
-  num_attempts: number;
-  answered_correctly: boolean;
+  correct_attempts: number;
+  incorrect_attempts: number;
+  last_answer_correct: boolean | null;
 }
 
 const questionSchema: Schema = new Schema({
@@ -55,13 +56,17 @@ const questionSchema: Schema = new Schema({
       required: true,
     }
   },
-  num_attempts: {
+  correct_attempts: {
     type: Number,
     required: true
   },
-  answered_correctly: {
-    type: Boolean,
+  incorrect_attempts: {
+    type: Number,
     required: true
+  },
+  last_answer_correct: {
+    type: Boolean,
+    required: false
   }
 });
 
@@ -79,7 +84,7 @@ class QuestionsProvider {
   private sessionToken: string | null = null;
   // workitem store connection object?
 
-  constructor() {} // workitem do i need a constructor if it is empty?
+  constructor() { } // workitem do i need a constructor if it is empty?
 
   async startQuestionSet(): Promise<IQuestion[]> {
     const sessionTokenResponse = await axios.get(
@@ -92,9 +97,10 @@ class QuestionsProvider {
       .connect(connectionString, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        useFindAndModify: false
       })
       .catch((err) => console.log(err));
-    
+
     await QuestionModel.deleteMany({});
 
     const triviaApiUrl = `https://opentdb.com/api.php?amount=15&category=18&token=${this.sessionToken}`;
@@ -104,13 +110,14 @@ class QuestionsProvider {
       (question: Trivia, index: number): IQuestion => {
         let newQuestion = {
           _id: index,
-          answered_correctly: false,
-          num_attempts: 0,
+          last_answer_correct: null,
+          correct_attempts: 0,
+          incorrect_attempts: 0,
           trivia: question
         };
         return newQuestion as IQuestion;
       });
-    
+
     questions.map(async (question: IQuestion) => {
       await QuestionModel.create(question).catch((err) => {
         console.log(err);
@@ -120,8 +127,101 @@ class QuestionsProvider {
     return questions;
   }
 
-  getQuestionsOrdered() {
-    
+  async getQuestionsOrdered(): Promise<IQuestion[]> {
+    await mongoose
+      .connect(connectionString, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useFindAndModify: false
+      })
+      .catch((err) => console.log(err));
+
+      // workitem separate out helper funcs
+    const difficultyVal = (diff: string): number => {
+      switch (diff) {
+        case 'hard': { 
+          return 3; 
+          break;
+        }
+        case 'medium': {
+          return 2;
+          break;
+        }
+        case 'easy': {
+          return 1;
+          break;
+        }
+        default: {
+          return -1;
+          break;
+        }
+      }
+    }
+
+    const incorrect: IQuestion[] = await QuestionModel.find({ last_answer_correct: false });
+    const sortedIncorrect = incorrect.sort((a: IQuestion, b:IQuestion): number => {
+      if (a.incorrect_attempts > b.incorrect_attempts) {
+        return -1;
+      }
+      else if (a.incorrect_attempts < b.incorrect_attempts) {
+        return 1;
+      }
+      else {
+        const aDiff = difficultyVal(a.trivia.difficulty);
+        const bDiff = difficultyVal(b.trivia.difficulty);
+        if (aDiff > bDiff) {
+          return -1;
+        }
+        else if (aDiff < bDiff) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      }
+    });
+
+    const unanswered: IQuestion[] = await QuestionModel.find({ last_answer_correct: null });
+    const sortedUnanswered = unanswered.sort((a: IQuestion, b:IQuestion): number => {
+        const aDiff = difficultyVal(a.trivia.difficulty);
+        const bDiff = difficultyVal(b.trivia.difficulty);
+        if (aDiff > bDiff) {
+          return 1;
+        }
+        else if (aDiff < bDiff) {
+          return -1;
+        }
+        else {
+          return 0;
+        }
+    });
+
+    const correct: IQuestion[] = await QuestionModel.find({ last_answer_correct: true });
+    const sortedCorrect: IQuestion[] = correct.sort((a: IQuestion, b:IQuestion): number => {
+      if (a.correct_attempts > b.correct_attempts) {
+        return 1;
+      }
+      else if (a.correct_attempts < b.correct_attempts) {
+        return -1;
+      }
+      else {
+        const aDiff = difficultyVal(a.trivia.difficulty);
+        const bDiff = difficultyVal(b.trivia.difficulty);
+        if (aDiff > bDiff) {
+          return -1;
+        }
+        else if (aDiff < bDiff) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      }
+    });
+
+    const questions = sortedIncorrect.concat(sortedUnanswered, sortedCorrect);
+
+    return questions;
   }
 
   async answerQuestion(question_id: string, answer: string): Promise<AnswerResponse> {
@@ -129,27 +229,34 @@ class QuestionsProvider {
       .connect(connectionString, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        useFindAndModify: false
       })
       .catch((err) => console.log(err));
 
-    const question = await QuestionModel.findById(question_id).exec() as IQuestion;
+    let question = await QuestionModel.findById(question_id).exec() as IQuestion;
 
     if (question.trivia.correct_answer === answer) {
-      await QuestionModel.findByIdAndUpdate(question_id, { answered_correctly: true })
-      .then((doc) => {console.log(doc)})
-      .catch((err) => {console.log(err)});
+      await QuestionModel.findByIdAndUpdate(question_id, { last_answer_correct: true, correct_attempts: question.correct_attempts + 1 })
+        .then((doc) => {
+          console.log(doc);
+        })
+        .catch((err) => { console.log(err) });
     }
     else {
-      await QuestionModel.findByIdAndUpdate(question_id, { num_attempts: question.num_attempts + 1 })
-      .then((doc) => {console.log(doc)})
-      .catch((err) => {console.log(err)});
+      await QuestionModel.findByIdAndUpdate(question_id, { last_answer_correct: false, incorrect_attempts: question.incorrect_attempts + 1 })
+        .then((doc) => {
+          console.log(doc);
+        })
+        .catch((err) => { console.log(err) });
     }
+
+    question = await QuestionModel.findById(question_id).exec() as IQuestion;
 
     const answerResponse = {
       question: question,
       result: question.trivia.correct_answer === answer ? "correct" : "incorrect"
     }
-    
+
     return answerResponse;
   }
 }

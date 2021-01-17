@@ -9,6 +9,7 @@ app.use(parser.json())
 // Dependencies
 const questionsProvider = new QuestionProvider();
 
+// workitem error handling
 // start new session and clear stored questions
 app.get('/start', async (req, res) => {
   const questions = await questionsProvider.startQuestionSet();
@@ -18,9 +19,10 @@ app.get('/start', async (req, res) => {
 });
 
 // get current question set
-app.get('/questions', (req, res) => {
-  res.status(501);
-  res.json({ error: "Not implemented" });
+app.get('/questions', async (req, res) => {
+  const questions = await questionsProvider.getQuestionsOrdered();
+  res.status(200);
+  res.json(questions);
   res.end();
 });
 
