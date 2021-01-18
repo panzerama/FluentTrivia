@@ -1,5 +1,5 @@
 type Question = {
-  id: string
+  id: number
   category : string
   type : string
   difficulty : string

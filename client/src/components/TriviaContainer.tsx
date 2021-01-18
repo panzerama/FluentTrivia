@@ -4,6 +4,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
+import axios, { AxiosRequestConfig } from 'axios';
 
 import { Question } from '../types/Question';
 import { Answer } from '../types/Answer';
@@ -44,6 +45,22 @@ class TriviaContainer
 
   startPracticeSession(): void {
     console.log('setting mock state');
+
+    const requestConfig: AxiosRequestConfig = {
+      url: 'http://localhost:4000/start',
+      method: 'get',
+      headers: { 'Accept': 'application/json' }
+    }
+
+    axios(requestConfig).then((response) => {
+      console.log("successful request" + response.data);
+      response.data.map((question: Question) => console.log(question.question))
+    }).catch((err) => {
+      if (err.response) { console.log("error " + err.response) }
+      else if (err.request) { console.log("error "); console.log(err.request); }
+      else { console.log("something else") }
+    });
+    
     this.setState({
       questions: DemoQuestions,
       currentSelectedQuestionIdx: 0,
