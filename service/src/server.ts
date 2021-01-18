@@ -1,7 +1,8 @@
-import express from 'express'
-import parser from 'body-parser'
+import express from 'express';
+import parser from 'body-parser';
+import mongoose from 'mongoose';
 
-import QuestionProvider from './QuestionsProvider'
+import QuestionProvider from './QuestionsProvider';
 import AnswerResponse from './types/AnswerResponse';
 import QuestionResponse from './types/QuestionResponse';
 
@@ -52,5 +53,15 @@ app.post('/question/:id', async (req, res, next) => {
   })
   .catch(err => next(err));
 })
+
+const password = process.env.MONGODB_PASSWORD ?? "";
+const connectionString = `mongodb+srv://jonas:${password}@cluster0.49ssl.mongodb.net/emerald?retryWrites=true&w=majority`;
+
+mongoose.connect(connectionString, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useFindAndModify: false
+      })
+      .catch((err) => console.log(err));
 
 app.listen(4000);

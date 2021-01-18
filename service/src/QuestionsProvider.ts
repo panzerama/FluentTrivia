@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 config({ path: resolve(__dirname, "../.env") });
 
-import mongoose, { model, Document, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 import axios from "axios";
 import { isImportEqualsDeclaration } from "typescript";
 import { create } from "domain";
@@ -60,14 +60,8 @@ const questionSchema: Schema = new Schema({
 
 const QuestionModel = model<IQuestion>("Question", questionSchema);
 
-const password = process.env.MONGODB_PASSWORD ?? "";
-const connectionString = `mongodb+srv://jonas:${password}@cluster0.49ssl.mongodb.net/emerald?retryWrites=true&w=majority`;
-
 class QuestionsProvider {
   private sessionToken: string | null = null;
-  // workitem store connection object?
-
-  constructor() { } // workitem do i need a constructor if it is empty?
 
   createQuestionResponse(from: IQuestion[]): QuestionResponse[] {
     const questionResponses: QuestionResponse[] = from.map((question: IQuestion): QuestionResponse => {
@@ -92,15 +86,6 @@ class QuestionsProvider {
       "https://opentdb.com/api_token.php?command=request"
     );
     this.sessionToken = sessionTokenResponse.data.token;
-
-    // workitem refactor connection logic into db client?
-    await mongoose
-      .connect(connectionString, {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useFindAndModify: false
-      })
-      .catch((err) => console.log(err));
 
     await QuestionModel.deleteMany({});
 
@@ -132,14 +117,6 @@ class QuestionsProvider {
   }
 
   async getQuestionsOrdered(): Promise<QuestionResponse[]> {
-    await mongoose
-      .connect(connectionString, {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useFindAndModify: false
-      })
-      .catch((err) => console.log(err));
-
       // workitem separate out helper funcs
     const difficultyVal = (diff: string): number => {
       switch (diff) {
@@ -231,28 +208,14 @@ class QuestionsProvider {
 
   // workitem do I actually want to send back the response or just a yes/no success or failure
   async answerQuestion(question_id: string, answer: string): Promise<AnswerResponse> {
-    await mongoose
-      .connect(connectionString, {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        useFindAndModify: false
-      })
-      .catch((err) => console.log(err));
-
     let question = await QuestionModel.findById(question_id).exec() as IQuestion;
 
     if (question.trivia.correct_answer === answer) {
       await QuestionModel.findByIdAndUpdate(question_id, { last_answer_correct: true, correct_attempts: question.correct_attempts + 1 })
-        .then((doc) => {
-          console.log(doc);
-        })
         .catch((err) => { console.log(err) });
     }
     else {
       await QuestionModel.findByIdAndUpdate(question_id, { last_answer_correct: false, incorrect_attempts: question.incorrect_attempts + 1 })
-        .then((doc) => {
-          console.log(doc);
-        })
         .catch((err) => { console.log(err) });
     }
 
