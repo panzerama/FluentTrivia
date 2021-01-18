@@ -12,17 +12,12 @@ import {
 } from "@material-ui/core";
 
 import { Question } from '../types/Question';
-import { Answer } from '../types/Answer';
-
-type AnswerOptions = {
-  description: string,
-  correct: boolean
-}
+import { AnswerOption } from '../types/AnswerOption';
 
 /* workitem: do i need to export the props types? */
 export type QuestionDisplayProps = {
   question: Question;
-  questionHandler: (answer: Answer) => void;
+  questionHandler: (questionId: number, answer: AnswerOption) => void;
 };
 
 const useStyles = makeStyles({
@@ -44,9 +39,9 @@ export const QuestionDisplay = ({
 }: QuestionDisplayProps) => {
   const classes = useStyles();
 
-  const randomizeElements = (arr: [AnswerOptions]): [AnswerOptions] => {
+  const randomizeElements = (arr: [AnswerOption]): [AnswerOption] => {
     let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
-    let randomized: [AnswerOptions] = [arr[randomIndex]];
+    let randomized: [AnswerOption] = [arr[randomIndex]];
     arr.splice(randomIndex, 1);
 
     console.log(arr);
@@ -60,15 +55,15 @@ export const QuestionDisplay = ({
     return randomized;
   };
 
-  const compileAnswers = (question: Question): [AnswerOptions] => {
-    let answers: [AnswerOptions] = [
+  const compileAnswers = (question: Question): [AnswerOption] => {
+    let answers: [AnswerOption] = [
       {
         description: question.correct_answer,
         correct: true,
       },
     ];
 
-    question.incorrect_answers.map((answer) => {
+    question.incorrect_answers.forEach((answer) => {
       answers.push({
         description: answer,
         correct: false,
@@ -80,8 +75,13 @@ export const QuestionDisplay = ({
 
   const randomizedAnswers = randomizeElements(compileAnswers(question));
 
+  const answerOptionHandler = (answerOption: AnswerOption): void => {
+    // set the display to show correct or incorrect
+    questionHandler(question.id, answerOption);
+  }
+
   return (
-    <Grid xs={12}>
+    <Grid item xs={12}>
     <Card>
       <CardContent>
       <Typography className={classes.title} gutterBottom>
@@ -97,3 +97,4 @@ export const QuestionDisplay = ({
       </Grid>
   );
 };
+// workitem refactor answer option into component...?

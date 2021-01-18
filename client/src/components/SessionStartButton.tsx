@@ -3,7 +3,6 @@ import React from "react";
 import { WithStyles, Grid, Button, createStyles } from "@material-ui/core";
 
 import Colors from "../constants/Colors";
-import { DemoQuestions } from "../mockData/DemoQuestions";
 
 const styles = createStyles({
   practiceModeButton: {

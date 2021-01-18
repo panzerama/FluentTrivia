@@ -7,9 +7,8 @@ import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { Question } from '../types/Question';
-import { Answer } from '../types/Answer';
+import { AnswerOption } from '../types/AnswerOption';
 import Colors from "../constants/Colors";
-import { DemoQuestions } from '../mockData/DemoQuestions';
 import SessionStartButton from './SessionStartButton';
 import { QuestionDisplay } from './QuestionDisplay';
 
@@ -54,22 +53,22 @@ class TriviaContainer
 
     axios(requestConfig).then((response) => {
       console.log("successful request" + response.data);
-      response.data.map((question: Question) => console.log(question.question))
+      const questions: Question[] = response.data;
+      
+      this.setState({
+        questions: questions,
+        currentSelectedQuestionIdx: 0,
+        sessionActive: true
+      })
     }).catch((err) => {
-      if (err.response) { console.log("error " + err.response) }
-      else if (err.request) { console.log("error "); console.log(err.request); }
-      else { console.log("something else") }
+      if (err.response) { console.log("error in response" + err.response) }
+      else if (err.request) { console.log("error in request"); console.log(err.request); }
+      else { console.log("error in something else") }
     });
-    
-    this.setState({
-      questions: DemoQuestions,
-      currentSelectedQuestionIdx: 0,
-      sessionActive: true
-    })
   }
 
-  questionAnswerHandler(answer: Answer): void {
-    console.log("questionHandler")
+  questionAnswerHandler(questionId: number, answer: AnswerOption): void {
+    console.log(`questionHandler for id ${questionId} and answer to ${answer.description}`);
   }
 
   render() {
