@@ -9,6 +9,17 @@ app.use(parser.json())
 // Dependencies
 const questionsProvider = new QuestionProvider();
 
+// cors being cors
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
+
 // workitem error handling
 // start new session and clear stored questions
 app.get('/start', async (req, res) => {

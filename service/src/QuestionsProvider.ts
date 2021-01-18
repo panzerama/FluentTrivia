@@ -6,6 +6,7 @@ config({ path: resolve(__dirname, "../.env") });
 import mongoose, { model, Document, Schema } from "mongoose";
 import axios from "axios";
 import { isImportEqualsDeclaration } from "typescript";
+import { create } from "domain";
 
 interface Trivia {
   category: string;
@@ -75,6 +76,16 @@ export interface AnswerResponse {
   result: string
 }
 
+type QuestionResponse = {
+  id: number;
+  category: string;
+  type: string;
+  difficulty: string;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: [string];
+}
+
 const QuestionModel = model<IQuestion>("Question", questionSchema);
 
 const password = process.env.MONGODB_PASSWORD ?? "";
@@ -86,7 +97,25 @@ class QuestionsProvider {
 
   constructor() { } // workitem do i need a constructor if it is empty?
 
-  async startQuestionSet(): Promise<IQuestion[]> {
+  createQuestionResponse(from: IQuestion[]): QuestionResponse[] {
+    const questionResponses: QuestionResponse[] = from.map((question: IQuestion): QuestionResponse => {
+      const questionResponse: QuestionResponse = {
+        id: question._id ?? -100,
+        category: question.trivia.category,
+        type: question.trivia.type,
+        difficulty: question.trivia.difficulty,
+        question: question.trivia.question,
+        correct_answer: question.trivia.correct_answer,
+        incorrect_answers: question.trivia.incorrect_answers
+      }
+
+      return questionResponse;
+    })
+
+    return questionResponses;
+  }
+
+  async startQuestionSet(): Promise<QuestionResponse[]> {
     const sessionTokenResponse = await axios.get(
       "https://opentdb.com/api_token.php?command=request"
     );
@@ -124,7 +153,10 @@ class QuestionsProvider {
       });
     });
 
-    return questions;
+    // workitem refactor this operation into a factory func
+    const questionResponses = this.createQuestionResponse(questions);
+
+    return questionResponses;
   }
 
   async getQuestionsOrdered(): Promise<IQuestion[]> {

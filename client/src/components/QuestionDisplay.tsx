@@ -14,11 +14,11 @@ import {
 import { Question } from '../types/Question';
 import { Answer } from '../types/Answer';
 
-/* workitem: do i need to export the props types? */
-export type QuestionDisplayProps = {
+type QuestionDisplayProps = {
   question: Question;
   answers: Answer[];
   questionHandler: (questionId: number, answer: Answer) => void;
+  nextButtonHandler: () => void;
 };
 
 const useStyles = makeStyles({
@@ -38,17 +38,16 @@ export const QuestionDisplay = ({
   question,
   answers,
   questionHandler,
+  nextButtonHandler
 }: QuestionDisplayProps) => {
   const classes = useStyles();
 
   const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean | null>(null);
   const [wasAnswered, setWasAnswered] = useState(false);
 
-  //workitem useEffect to prevent re-rendering on correct/incorrect
-
   const answerHandler = (answer: Answer): void => {
     // workitem style the display differently for correct or incorrect
-    console.log(`answerHandler for ${answer.description} with ${answer.correct ? "correct " : "incorrect "} answer`)
+    // console.log(`answerHandler for ${answer.description} with ${answer.correct ? "correct " : "incorrect "} answer`)
     setAnsweredCorrectly(answer.correct);
     setWasAnswered(true);
     questionHandler(question.id, answer);
@@ -71,10 +70,11 @@ export const QuestionDisplay = ({
               )
             })}
           </List>
-          { wasAnswered ? <Button>Next</Button> : "" }
+          { wasAnswered ? <Button onClick={() => nextButtonHandler()}>Next</Button> : "" }
         </CardContent>
       </Card>
     </Grid>
   );
 };
 // workitem refactor answer option into component...?
+// workitem prevent appearance of elements from increasing space awkwardly

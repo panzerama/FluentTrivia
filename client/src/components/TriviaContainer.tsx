@@ -71,6 +71,10 @@ class TriviaContainer
     console.log(`questionHandler for id ${questionId} and answer to ${answer.description}`);
   }
 
+  advanceQuestionHandler() {
+    this.setState({currentSelectedQuestionIdx: this.state.currentSelectedQuestionIdx + 1})
+  }
+
   randomizeElements(arr: [Answer]): [Answer] {
     let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
     let randomized: [Answer] = [arr[randomIndex]];
@@ -118,6 +122,7 @@ class TriviaContainer
               question={this.state.questions[this.state.currentSelectedQuestionIdx]}
               answers={this.randomizeElements(this.compileAnswers(this.state.questions[this.state.currentSelectedQuestionIdx]))}
               questionHandler={this.questionAnswerHandler.bind(this)}
+              nextButtonHandler={this.advanceQuestionHandler.bind(this)}
             />
           )}
         </Grid>
