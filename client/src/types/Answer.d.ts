@@ -1,7 +1,7 @@
 
-type AnswerOption = {
+type Answer = {
     description: string,
     correct: boolean
   }
 
-  export { AnswerOption }
+  export { Answer }

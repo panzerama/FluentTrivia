@@ -7,7 +7,7 @@ import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { Question } from '../types/Question';
-import { AnswerOption } from '../types/AnswerOption';
+import { Answer } from '../types/Answer';
 import Colors from "../constants/Colors";
 import SessionStartButton from './SessionStartButton';
 import { QuestionDisplay } from './QuestionDisplay';
@@ -43,7 +43,7 @@ class TriviaContainer
   }
 
   startPracticeSession(): void {
-    console.log('setting mock state');
+    console.log('setting state');
 
     const requestConfig: AxiosRequestConfig = {
       url: 'http://localhost:4000/start',
@@ -67,7 +67,7 @@ class TriviaContainer
     });
   }
 
-  questionAnswerHandler(questionId: number, answer: AnswerOption): void {
+  questionAnswerHandler(questionId: number, answer: Answer): void {
     console.log(`questionHandler for id ${questionId} and answer to ${answer.description}`);
   }
 

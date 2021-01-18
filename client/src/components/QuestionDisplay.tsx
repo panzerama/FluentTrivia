@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Card,
-  CardContent, 
+  CardContent,
   Typography,
   makeStyles,
   List,
@@ -12,12 +12,12 @@ import {
 } from "@material-ui/core";
 
 import { Question } from '../types/Question';
-import { AnswerOption } from '../types/AnswerOption';
+import { Answer } from '../types/Answer';
 
 /* workitem: do i need to export the props types? */
 export type QuestionDisplayProps = {
   question: Question;
-  questionHandler: (questionId: number, answer: AnswerOption) => void;
+  questionHandler: (questionId: number, answer: Answer) => void;
 };
 
 const useStyles = makeStyles({
@@ -39,9 +39,13 @@ export const QuestionDisplay = ({
 }: QuestionDisplayProps) => {
   const classes = useStyles();
 
-  const randomizeElements = (arr: [AnswerOption]): [AnswerOption] => {
+  const [answeredCorrectly, setAnsweredCorrectly] = useState(false);
+
+  //workitem useEffect to prevent re-rendering on correct/incorrect
+
+  const randomizeElements = (arr: [Answer]): [Answer] => {
     let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
-    let randomized: [AnswerOption] = [arr[randomIndex]];
+    let randomized: [Answer] = [arr[randomIndex]];
     arr.splice(randomIndex, 1);
 
     console.log(arr);
@@ -55,8 +59,8 @@ export const QuestionDisplay = ({
     return randomized;
   };
 
-  const compileAnswers = (question: Question): [AnswerOption] => {
-    let answers: [AnswerOption] = [
+  const compileAnswers = (question: Question): [Answer] => {
+    let answers: [Answer] = [
       {
         description: question.correct_answer,
         correct: true,
@@ -75,26 +79,33 @@ export const QuestionDisplay = ({
 
   const randomizedAnswers = randomizeElements(compileAnswers(question));
 
-  const answerOptionHandler = (answerOption: AnswerOption): void => {
-    // set the display to show correct or incorrect
-    questionHandler(question.id, answerOption);
+  const answerHandler = (answer: Answer): void => {
+    // workitem style the display differently for correct or incorrect
+    console.log(`answerHandler for ${answer.description} with ${answer.correct ? "correct " : "incorrect "} answer`)
+    setAnsweredCorrectly(answer.correct);
+    questionHandler(question.id, answer);
   }
 
   return (
     <Grid item xs={12}>
-    <Card>
-      <CardContent>
-      <Typography className={classes.title} gutterBottom>
-          {question.question}
-        </Typography>
-        <List className={classes.list}>
-          {randomizedAnswers.map((answerOption) => {
-            return <ListItem key={answerOption.description}><Button variant="contained">{answerOption.description}</Button></ListItem>
-          })}
-        </List>
-      </CardContent>
+      <Card>
+        <CardContent>
+          <Typography className={classes.title} gutterBottom>
+            {question.question}
+          </Typography>
+          {answeredCorrectly ? <Typography>Correct!</Typography> : <Typography>Incorrect!</Typography>}
+          <List className={classes.list}>
+            {randomizedAnswers.map((answer) => {
+              return (
+                <ListItem key={answer.description}>
+                  <Button onClick={() => answerHandler(answer)} variant="contained">{answer.description}</Button>
+                </ListItem>
+              )
+            })}
+          </List>
+        </CardContent>
       </Card>
-      </Grid>
+    </Grid>
   );
 };
 // workitem refactor answer option into component...?
