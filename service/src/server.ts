@@ -1,6 +1,9 @@
 import express from 'express'
 import parser from 'body-parser'
-import QuestionProvider, { AnswerResponse, QuestionResponse } from './QuestionsProvider'
+
+import QuestionProvider from './QuestionsProvider'
+import AnswerResponse from './types/AnswerResponse';
+import QuestionResponse from './types/QuestionResponse';
 
 const app: express.Application = express()
 app.use(parser.json())

@@ -8,23 +8,10 @@ import axios from "axios";
 import { isImportEqualsDeclaration } from "typescript";
 import { create } from "domain";
 
-interface Trivia {
-  category: string;
-  type: string;
-  difficulty: string;
-  question: string;
-  correct_answer: string;
-  incorrect_answers: [string];
-}
-
-// workitem create subdocument relationship?
-interface IQuestion extends Document {
-  _id?: number;
-  trivia: Trivia;
-  correct_attempts: number;
-  incorrect_attempts: number;
-  last_answer_correct: boolean | null;
-}
+import Trivia from './types/Trivia';
+import IQuestion from './types/IQuestion';
+import AnswerResponse from './types/AnswerResponse';
+import QuestionResponse from './types/QuestionResponse';
 
 const questionSchema: Schema = new Schema({
   _id: {
@@ -70,22 +57,6 @@ const questionSchema: Schema = new Schema({
     required: false
   }
 });
-
-// workitem move types into a separate file
-export interface AnswerResponse {
-  question: IQuestion,
-  result: string
-}
-
-export type QuestionResponse = {
-  id: number;
-  category: string;
-  type: string;
-  difficulty: string;
-  question: string;
-  correct_answer: string;
-  incorrect_answers: [string];
-}
 
 const QuestionModel = model<IQuestion>("Question", questionSchema);
 
