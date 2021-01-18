@@ -7,11 +7,11 @@ import {
   makeStyles,
   List,
   ListItem,
-  Button
+  Button,
+  Grid
 } from "@material-ui/core";
 
 import { Question } from "../types/Question";
-import { FullscreenExitTwoTone } from "@material-ui/icons";
 
 /* workitem: do i need to export the props types? */
 export type QuestionDisplayProps = {
@@ -80,6 +80,7 @@ export const QuestionDisplay = ({
   const randomizedAnswers = randomizeElements(compileAnswers(question));
 
   return (
+    <Grid xs={12}>
     <Card>
       <CardContent>
       <Typography className={classes.title} gutterBottom>
@@ -91,6 +92,7 @@ export const QuestionDisplay = ({
           })}
         </List>
       </CardContent>
-    </Card>
+      </Card>
+      </Grid>
   );
 };

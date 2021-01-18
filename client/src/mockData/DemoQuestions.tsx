@@ -1,4 +1,6 @@
-const DemoQuestions = [
+import { Question } from '../types/Question';
+
+const DemoQuestions: Question[] = [
   {
     id: "001",
     category: "Mythology",
