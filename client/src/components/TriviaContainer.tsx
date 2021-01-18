@@ -30,7 +30,8 @@ interface TriviaContainerProps extends WithStyles<typeof styles>{ }
 type TriviaContainerState = {
   questions: Question[],
   currentSelectedQuestionIdx: number,
-  sessionActive: boolean
+  sessionActive: boolean,
+  questionSetCorrect: boolean
 }
 
 // workitem refactor all types into types container
@@ -39,12 +40,11 @@ class TriviaContainer
   state: TriviaContainerState = {
     questions: [],
     currentSelectedQuestionIdx: -1,
-    sessionActive: false
+    sessionActive: false, 
+    questionSetCorrect: false
   }
 
   startPracticeSession(): void {
-    console.log('setting state');
-
     const requestConfig: AxiosRequestConfig = {
       url: 'http://localhost:4000/start',
       method: 'get',
@@ -52,13 +52,14 @@ class TriviaContainer
     }
 
     axios(requestConfig).then((response) => {
-      console.log("successful request" + response.data);
+      console.log("successful start session request");
       const questions: Question[] = response.data;
       
       this.setState({
         questions: questions,
         currentSelectedQuestionIdx: 0,
-        sessionActive: true
+        sessionActive: true,
+        questionSetCorrect: true
       })
     }).catch((err) => {
       if (err.response) { console.log("error in response" + err.response) }
@@ -68,19 +69,62 @@ class TriviaContainer
   }
 
   questionAnswerHandler(questionId: number, answer: Answer): void {
-    console.log(`questionHandler for id ${questionId} and answer to ${answer.description}`);
+    if (!answer.correct) { this.setState({questionSetCorrect: false}) }
+    console.log(`question set correct is curently ${this.state.questionSetCorrect ? "true" : "false"}`);
+    const requestConfig: AxiosRequestConfig = {
+      url: `http://localhost:4000/question/${questionId}`,
+      method: 'post',
+      headers: { 'Accept': 'application/json' },
+      data: {
+        'answer': answer.description
+      }
+    }
+
+    axios(requestConfig)
+    .catch(err => console.log(err));
+  }
+
+  restartQuestionSet(): void {
+    const requestConfig: AxiosRequestConfig = {
+      url: 'http://localhost:4000/questions',
+      method: 'get',
+      headers: { 'Accept': 'application/json' }
+    }
+
+    axios(requestConfig).then((response) => {
+      const questions: Question[] = response.data;
+      
+      this.setState({
+        questions: questions,
+        currentSelectedQuestionIdx: 0,
+        sessionActive: true,
+        questionSetCorrect: true
+      })
+    }).catch((err) => {
+      if (err.response) { console.log("error in response" + err.response) }
+      else if (err.request) { console.log("error in request"); console.log(err.request); }
+      else { console.log("error in something else") }
+    });
   }
 
   advanceQuestionHandler() {
-    this.setState({currentSelectedQuestionIdx: this.state.currentSelectedQuestionIdx + 1})
+    if (this.state.currentSelectedQuestionIdx < 14) {
+      this.setState({currentSelectedQuestionIdx: this.state.currentSelectedQuestionIdx + 1})
+    } else {
+      if (this.state.questionSetCorrect) {
+        this.setState({
+          sessionActive: false
+        })
+      } else {
+        this.restartQuestionSet()
+      }
+    } 
   }
 
   randomizeElements(arr: [Answer]): [Answer] {
     let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
     let randomized: [Answer] = [arr[randomIndex]];
     arr.splice(randomIndex, 1);
-
-    console.log(arr);
 
     while (arr.length > 0) {
       randomIndex = Math.floor(Math.random() * Math.floor(arr.length));

@@ -53,6 +53,21 @@ export const QuestionDisplay = ({
     questionHandler(question.id, answer);
   }
 
+  const nextButtonTapped = () => {
+    setAnsweredCorrectly(null);
+    setWasAnswered(false);
+    nextButtonHandler()
+  }
+
+  const resultMessage = () => {
+    if (wasAnswered) {
+      const message = answeredCorrectly ? "Correct" : `Incorrect. The correct answer is ${question.correct_answer}`;
+      return <Typography>{ message }</Typography>
+    } else {
+      return ""
+    }
+  }
+
   return (
     <Grid item xs={12}>
       <Card>
@@ -60,7 +75,7 @@ export const QuestionDisplay = ({
           <Typography className={classes.title} gutterBottom>
             {question.question}
           </Typography>
-          { wasAnswered ? <Typography>{ answeredCorrectly ? "Correct" : "Incorrect" }</Typography> : "" }
+          { resultMessage() }
           <List className={classes.list}>
             {answers.map((answer) => {
               return (
@@ -70,7 +85,7 @@ export const QuestionDisplay = ({
               )
             })}
           </List>
-          { wasAnswered ? <Button onClick={() => nextButtonHandler()}>Next</Button> : "" }
+          { wasAnswered ? <Button onClick={() => nextButtonTapped()}>Next</Button> : "" }
         </CardContent>
       </Card>
     </Grid>
