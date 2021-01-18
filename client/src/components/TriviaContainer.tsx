@@ -71,6 +71,40 @@ class TriviaContainer
     console.log(`questionHandler for id ${questionId} and answer to ${answer.description}`);
   }
 
+  randomizeElements(arr: [Answer]): [Answer] {
+    let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
+    let randomized: [Answer] = [arr[randomIndex]];
+    arr.splice(randomIndex, 1);
+
+    console.log(arr);
+
+    while (arr.length > 0) {
+      randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
+      randomized.push(arr[randomIndex]);
+      arr.splice(randomIndex, 1);
+    }
+
+    return randomized;
+  };
+
+  compileAnswers(question: Question): [Answer] { 
+    let answers: [Answer] = [
+      {
+        description: question.correct_answer,
+        correct: true,
+      },
+    ];
+
+    question.incorrect_answers.forEach((answer) => {
+      answers.push({
+        description: answer,
+        correct: false,
+      });
+    });
+
+    return answers;
+  };
+
   render() {
     return (
       <Container maxWidth="md">
@@ -82,6 +116,7 @@ class TriviaContainer
           ) : (
             <QuestionDisplay
               question={this.state.questions[this.state.currentSelectedQuestionIdx]}
+              answers={this.randomizeElements(this.compileAnswers(this.state.questions[this.state.currentSelectedQuestionIdx]))}
               questionHandler={this.questionAnswerHandler.bind(this)}
             />
           )}
@@ -92,3 +127,6 @@ class TriviaContainer
 }
 
 export default withStyles(styles)(TriviaContainer);
+
+// workitem clean up notation
+// workitem change the way we send answers from service in view model to flatten
