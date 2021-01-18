@@ -6,11 +6,11 @@ import {
 import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
 
 import { Question } from '../types/Question';
+import { Answer } from '../types/Answer';
 import Colors from "../constants/Colors";
 import { DemoQuestions } from '../mockData/DemoQuestions';
 import SessionStartButton from './SessionStartButton';
 import { QuestionDisplay } from './QuestionDisplay';
-
 
 const styles = () =>
   createStyles({
@@ -33,6 +33,7 @@ type TriviaContainerState = {
   sessionActive: boolean
 }
 
+// workitem refactor all types into types container
 class TriviaContainer
   extends React.Component<TriviaContainerProps, TriviaContainerState> {
   state: TriviaContainerState = {
@@ -50,20 +51,22 @@ class TriviaContainer
     })
   }
 
+  questionAnswerHandler(answer: Answer): void {
+    console.log("questionHandler")
+  }
+
   render() {
     return (
       <Container maxWidth="md">
         <Grid container spacing={3} direction="row" justify="center">
-          {this.state.sessionActive ? (
+          {!this.state.sessionActive ? (
             <SessionStartButton
               startSessionHandler={this.startPracticeSession.bind(this)}
             />
           ) : (
             <QuestionDisplay
-              question={this.state.questions[currentSelectedQuestionIdx]}
-              questionHandler={() => {
-                console.log("questionHandler");
-              }}
+              question={this.state.questions[this.state.currentSelectedQuestionIdx]}
+              questionHandler={this.questionAnswerHandler.bind(this)}
             />
           )}
         </Grid>

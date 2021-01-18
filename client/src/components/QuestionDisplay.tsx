@@ -11,17 +11,18 @@ import {
   Grid
 } from "@material-ui/core";
 
-import { Question } from "../types/Question";
+import { Question } from '../types/Question';
+import { Answer } from '../types/Answer';
+
+type AnswerOptions = {
+  description: string,
+  correct: boolean
+}
 
 /* workitem: do i need to export the props types? */
 export type QuestionDisplayProps = {
   question: Question;
-  questionHandler?: () => boolean;
-};
-
-type Answer = {
-  description: string;
-  correct: boolean;
+  questionHandler: (answer: Answer) => void;
 };
 
 const useStyles = makeStyles({
@@ -43,9 +44,9 @@ export const QuestionDisplay = ({
 }: QuestionDisplayProps) => {
   const classes = useStyles();
 
-  const randomizeElements = (arr: [Answer]) => {
+  const randomizeElements = (arr: [AnswerOptions]): [AnswerOptions] => {
     let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
-    let randomized: [Answer] = [arr[randomIndex]];
+    let randomized: [AnswerOptions] = [arr[randomIndex]];
     arr.splice(randomIndex, 1);
 
     console.log(arr);
@@ -59,8 +60,8 @@ export const QuestionDisplay = ({
     return randomized;
   };
 
-  const compileAnswers = (question: Question) => {
-    let answers: [Answer] = [
+  const compileAnswers = (question: Question): [AnswerOptions] => {
+    let answers: [AnswerOptions] = [
       {
         description: question.correct_answer,
         correct: true,
@@ -87,8 +88,8 @@ export const QuestionDisplay = ({
           {question.question}
         </Typography>
         <List className={classes.list}>
-          {randomizedAnswers.map((answer) => {
-            return <ListItem><Button variant="contained">{answer.description}</Button></ListItem>
+          {randomizedAnswers.map((answerOption) => {
+            return <ListItem key={answerOption.description}><Button variant="contained">{answerOption.description}</Button></ListItem>
           })}
         </List>
       </CardContent>

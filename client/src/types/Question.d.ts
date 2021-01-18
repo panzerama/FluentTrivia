@@ -1,5 +1,4 @@
-// Type Declaration
-export type Question = {
+type Question = {
   id: string
   category : string
   type : string
@@ -8,3 +7,5 @@ export type Question = {
   correct_answer : string
   incorrect_answers : string[]
 }
+
+export { Question }
