@@ -71,12 +71,13 @@ const questionSchema: Schema = new Schema({
   }
 });
 
+// workitem move types into a separate file
 export interface AnswerResponse {
   question: IQuestion,
   result: string
 }
 
-type QuestionResponse = {
+export type QuestionResponse = {
   id: number;
   category: string;
   type: string;
@@ -121,7 +122,7 @@ class QuestionsProvider {
     );
     this.sessionToken = sessionTokenResponse.data.token;
 
-    // workitem refactor connection logic
+    // workitem refactor connection logic into db client?
     await mongoose
       .connect(connectionString, {
         useUnifiedTopology: true,
@@ -133,6 +134,7 @@ class QuestionsProvider {
     await QuestionModel.deleteMany({});
 
     const triviaApiUrl = `https://opentdb.com/api.php?amount=15&category=18&token=${this.sessionToken}`;
+    // workitem if response_code from api response is 4, end of question has been reached for this token
 
     const questionResponse = await axios.get(triviaApiUrl);
     const questions: IQuestion[] = questionResponse.data.results.map(
@@ -153,13 +155,12 @@ class QuestionsProvider {
       });
     });
 
-    // workitem refactor this operation into a factory func
     const questionResponses = this.createQuestionResponse(questions);
 
     return questionResponses;
   }
 
-  async getQuestionsOrdered(): Promise<IQuestion[]> {
+  async getQuestionsOrdered(): Promise<QuestionResponse[]> {
     await mongoose
       .connect(connectionString, {
         useUnifiedTopology: true,
@@ -252,10 +253,12 @@ class QuestionsProvider {
     });
 
     const questions = sortedIncorrect.concat(sortedUnanswered, sortedCorrect);
+    const questionResponses = this.createQuestionResponse(questions);
 
-    return questions;
+    return questionResponses;
   }
 
+  // workitem do I actually want to send back the response or just a yes/no success or failure
   async answerQuestion(question_id: string, answer: string): Promise<AnswerResponse> {
     await mongoose
       .connect(connectionString, {

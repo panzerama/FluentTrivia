@@ -1,17 +1,15 @@
 import express from 'express'
 import parser from 'body-parser'
-import QuestionProvider, { AnswerResponse } from './QuestionsProvider'
-import { resolveTripleslashReference } from 'typescript'
+import QuestionProvider, { AnswerResponse, QuestionResponse } from './QuestionsProvider'
 
 const app: express.Application = express()
 app.use(parser.json())
 
-// Dependencies
 const questionsProvider = new QuestionProvider();
 
-// cors being cors
+// Disabling CORS in development
 app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'
@@ -19,34 +17,37 @@ app.use(function(req, res, next) {
   next();
 });
 
-
-// workitem error handling
-// start new session and clear stored questions
-app.get('/start', async (req, res) => {
-  const questions = await questionsProvider.startQuestionSet();
-  res.status(200);
-  res.json(questions);
-  res.end();
+/** Starts a new set of questions */
+app.get('/start', async (req, res, next) => {
+  questionsProvider.startQuestionSet()
+  .then((questions: QuestionResponse[]): void => {
+    res.status(200);
+    res.json(questions);
+    res.end();
+  })
+  .catch(err => next(err));
 });
 
-// get current question set
-app.get('/questions', async (req, res) => {
-  const questions = await questionsProvider.getQuestionsOrdered();
-  res.status(200);
-  res.json(questions);
-  res.end();
+/** Gets the current set of questions in appropriate order */
+app.get('/questions', async (req, res, next) => {
+  questionsProvider.getQuestionsOrdered()
+  .then((questions: QuestionResponse[]): void => {
+    res.status(200);
+    res.json(questions);
+    res.end();
+  })
+  .catch(err => next(err));
 });
 
-// answer question something
+/** Submit an answer for question with :id */
 app.post('/question/:id', async (req, res, next) => {
-  try {
-    const answer: AnswerResponse = await questionsProvider.answerQuestion(req.params.id, req.body.answer);
+  questionsProvider.answerQuestion(req.params.id, req.body.answer)
+  .then((answer: AnswerResponse) => {
     res.status(200);
     res.json(answer);
     res.end();
-  } catch (err) {
-    next(err)
-  }
+  })
+  .catch(err => next(err));
 })
 
-app.listen(4000)
+app.listen(4000);
