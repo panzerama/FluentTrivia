@@ -16,7 +16,7 @@ interface SessionStartButtonProps extends WithStyles<typeof styles> {
   startSessionHandler: () => void;
 }
 
-function SessionStartButton(props: SessionStartButtonProps) {
+const SessionStartButton = (props: SessionStartButtonProps) => {
   return (
     <Grid item xs={12}>
       <Button

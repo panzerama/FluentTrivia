@@ -10,7 +10,7 @@ import { Question } from '../types/Question';
 import { Answer } from '../types/Answer';
 import Colors from "../constants/Colors";
 import SessionStartButton from './SessionStartButton';
-import { QuestionDisplay } from './QuestionDisplay';
+import QuestionDisplay from './QuestionDisplay';
 
 const styles = () =>
   createStyles({
@@ -25,7 +25,7 @@ const styles = () =>
     },
   });
 
-interface TriviaContainerProps extends WithStyles<typeof styles>{ }
+interface TriviaContainerProps extends WithStyles<typeof styles>{}
 
 type TriviaContainerState = {
   questions: Question[],
@@ -34,7 +34,6 @@ type TriviaContainerState = {
   questionSetCorrect: boolean
 }
 
-// workitem refactor all types into types container
 class TriviaContainer
   extends React.Component<TriviaContainerProps, TriviaContainerState> {
   state: TriviaContainerState = {
@@ -52,7 +51,6 @@ class TriviaContainer
     }
 
     axios(requestConfig).then((response) => {
-      console.log("successful start session request");
       const questions: Question[] = response.data;
       
       this.setState({
@@ -70,7 +68,6 @@ class TriviaContainer
 
   questionAnswerHandler(questionId: number, answer: Answer): void {
     if (!answer.correct) { this.setState({questionSetCorrect: false}) }
-    console.log(`question set correct is curently ${this.state.questionSetCorrect ? "true" : "false"}`);
     const requestConfig: AxiosRequestConfig = {
       url: `http://localhost:4000/question/${questionId}`,
       method: 'post',
@@ -92,7 +89,8 @@ class TriviaContainer
     }
 
     axios(requestConfig).then((response) => {
-      const questions: Question[] = response.data;
+      const parsed = JSON.parse(response.data);
+      const questions: Question[] = parsed;
       
       this.setState({
         questions: questions,
@@ -121,7 +119,7 @@ class TriviaContainer
     } 
   }
 
-  randomizeElements(arr: [Answer]): [Answer] {
+  randomizeElements(arr: Answer[]): Answer[] {
     let randomIndex = Math.floor(Math.random() * Math.floor(arr.length));
     let randomized: [Answer] = [arr[randomIndex]];
     arr.splice(randomIndex, 1);
@@ -135,8 +133,8 @@ class TriviaContainer
     return randomized;
   };
 
-  compileAnswers(question: Question): [Answer] { 
-    let answers: [Answer] = [
+  compileAnswers(question: Question): Answer[] { 
+    let answers: Answer[] = [
       {
         description: question.correct_answer,
         correct: true,
@@ -177,5 +175,4 @@ class TriviaContainer
 
 export default withStyles(styles)(TriviaContainer);
 
-// workitem clean up notation
 // workitem change the way we send answers from service in view model to flatten

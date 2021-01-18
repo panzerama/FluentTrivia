@@ -6,11 +6,11 @@ import {
   Typography,
   makeStyles,
   List,
-  ListItem,
   Button,
   Grid
 } from "@material-ui/core";
 
+import { AnswerOption } from '../components/AnswerOption'
 import { Question } from '../types/Question';
 import { Answer } from '../types/Answer';
 
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
   }
 });
 
-export const QuestionDisplay = ({
+const QuestionDisplay = ({
   question,
   answers,
   questionHandler,
@@ -46,8 +46,6 @@ export const QuestionDisplay = ({
   const [wasAnswered, setWasAnswered] = useState(false);
 
   const answerHandler = (answer: Answer): void => {
-    // workitem style the display differently for correct or incorrect
-    // console.log(`answerHandler for ${answer.description} with ${answer.correct ? "correct " : "incorrect "} answer`)
     setAnsweredCorrectly(answer.correct);
     setWasAnswered(true);
     questionHandler(question.id, answer);
@@ -62,7 +60,8 @@ export const QuestionDisplay = ({
   const resultMessage = () => {
     if (wasAnswered) {
       const message = answeredCorrectly ? "Correct" : `Incorrect. The correct answer is ${question.correct_answer}`;
-      return <Typography>{ message }</Typography>
+      const color = answeredCorrectly ? 'primary' : 'error';
+      return <Typography color={color}>{ message }</Typography>
     } else {
       return ""
     }
@@ -72,17 +71,13 @@ export const QuestionDisplay = ({
     <Grid item xs={12}>
       <Card>
         <CardContent>
-          <Typography className={classes.title} gutterBottom>
+          <Typography className={classes.title} color='primary' gutterBottom>
             {question.question}
           </Typography>
           { resultMessage() }
           <List className={classes.list}>
             {answers.map((answer) => {
-              return (
-                <ListItem key={answer.description}>
-                  <Button onClick={() => answerHandler(answer)} disabled={wasAnswered} variant="contained">{answer.description}</Button>
-                </ListItem>
-              )
+              return <AnswerOption answer={answer} answerHandler={answerHandler} wasAnswered={wasAnswered}/>
             })}
           </List>
           { wasAnswered ? <Button onClick={() => nextButtonTapped()}>Next</Button> : "" }
@@ -91,5 +86,6 @@ export const QuestionDisplay = ({
     </Grid>
   );
 };
-// workitem refactor answer option into component...?
+
+export default QuestionDisplay;
 // workitem prevent appearance of elements from increasing space awkwardly

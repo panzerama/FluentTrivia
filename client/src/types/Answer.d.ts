@@ -4,4 +4,4 @@ type Answer = {
     correct: boolean
   }
 
-  export { Answer }
+export { Answer }
