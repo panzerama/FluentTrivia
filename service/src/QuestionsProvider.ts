@@ -12,6 +12,12 @@ import Trivia from './types/Trivia';
 import IQuestion from './types/IQuestion';
 import AnswerResponse from './types/AnswerResponse';
 import QuestionResponse from './types/QuestionResponse';
+import { 
+  difficultyVal, 
+  sortIncorrect, 
+  sortUnanswered,
+  sortCorrect
+} from './QuestionsUtils';
 
 const questionSchema: Schema = new Schema({
   _id: {
@@ -117,88 +123,14 @@ class QuestionsProvider {
   }
 
   async getQuestionsOrdered(): Promise<QuestionResponse[]> {
-      // workitem separate out helper funcs
-    const difficultyVal = (diff: string): number => {
-      switch (diff) {
-        case 'hard': { 
-          return 3; 
-          break;
-        }
-        case 'medium': {
-          return 2;
-          break;
-        }
-        case 'easy': {
-          return 1;
-          break;
-        }
-        default: {
-          return -1;
-          break;
-        }
-      }
-    }
-
     const incorrect: IQuestion[] = await QuestionModel.find({ last_answer_correct: false });
-    const sortedIncorrect = incorrect.sort((a: IQuestion, b:IQuestion): number => {
-      if (a.incorrect_attempts > b.incorrect_attempts) {
-        return -1;
-      }
-      else if (a.incorrect_attempts < b.incorrect_attempts) {
-        return 1;
-      }
-      else {
-        const aDiff = difficultyVal(a.trivia.difficulty);
-        const bDiff = difficultyVal(b.trivia.difficulty);
-        if (aDiff > bDiff) {
-          return -1;
-        }
-        else if (aDiff < bDiff) {
-          return 1;
-        }
-        else {
-          return 0;
-        }
-      }
-    });
+    const sortedIncorrect = incorrect.sort(sortIncorrect);
 
     const unanswered: IQuestion[] = await QuestionModel.find({ last_answer_correct: null });
-    const sortedUnanswered = unanswered.sort((a: IQuestion, b:IQuestion): number => {
-        const aDiff = difficultyVal(a.trivia.difficulty);
-        const bDiff = difficultyVal(b.trivia.difficulty);
-        if (aDiff > bDiff) {
-          return 1;
-        }
-        else if (aDiff < bDiff) {
-          return -1;
-        }
-        else {
-          return 0;
-        }
-    });
+    const sortedUnanswered = unanswered.sort(sortUnanswered);
 
     const correct: IQuestion[] = await QuestionModel.find({ last_answer_correct: true });
-    const sortedCorrect: IQuestion[] = correct.sort((a: IQuestion, b:IQuestion): number => {
-      if (a.correct_attempts > b.correct_attempts) {
-        return 1;
-      }
-      else if (a.correct_attempts < b.correct_attempts) {
-        return -1;
-      }
-      else {
-        const aDiff = difficultyVal(a.trivia.difficulty);
-        const bDiff = difficultyVal(b.trivia.difficulty);
-        if (aDiff > bDiff) {
-          return -1;
-        }
-        else if (aDiff < bDiff) {
-          return 1;
-        }
-        else {
-          return 0;
-        }
-      }
-    });
+    const sortedCorrect: IQuestion[] = correct.sort(sortCorrect);
 
     const questions = sortedIncorrect.concat(sortedUnanswered, sortedCorrect);
     const questionResponses = this.createQuestionResponse(questions);
@@ -206,7 +138,6 @@ class QuestionsProvider {
     return questionResponses;
   }
 
-  // workitem do I actually want to send back the response or just a yes/no success or failure
   async answerQuestion(question_id: string, answer: string): Promise<AnswerResponse> {
     let question = await QuestionModel.findById(question_id).exec() as IQuestion;
 
@@ -219,10 +150,7 @@ class QuestionsProvider {
         .catch((err) => { console.log(err) });
     }
 
-    question = await QuestionModel.findById(question_id).exec() as IQuestion;
-
     const answerResponse = {
-      question: question,
       result: question.trivia.correct_answer === answer ? "correct" : "incorrect"
     }
 
