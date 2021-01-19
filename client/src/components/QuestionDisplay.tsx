@@ -14,13 +14,6 @@ import { AnswerOption } from '../components/AnswerOption'
 import { Question } from '../types/Question';
 import { Answer } from '../types/Answer';
 
-type QuestionDisplayProps = {
-  question: Question;
-  answers: Answer[];
-  questionHandler: (questionId: number, answer: Answer) => void;
-  nextButtonHandler: () => void;
-};
-
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -33,6 +26,13 @@ const useStyles = makeStyles({
     flexDirection: 'row'
   }
 });
+
+type QuestionDisplayProps = {
+  question: Question;
+  answers: Answer[];
+  questionHandler: (questionId: number, answer: Answer) => void;
+  nextButtonHandler: () => void;
+};
 
 const QuestionDisplay = ({
   question,
@@ -59,7 +59,8 @@ const QuestionDisplay = ({
 
   const resultMessage = () => {
     if (wasAnswered) {
-      const message = answeredCorrectly ? "Correct" : `Incorrect. The correct answer is ${question.correct_answer}`;
+      const correctAnswerDescription: string = question.answers.filter((answer) => answer.correct)[0].description;
+      const message = answeredCorrectly ? "Correct" : `Incorrect. The correct answer is ${correctAnswerDescription}`;
       const color = answeredCorrectly ? 'primary' : 'error';
       return <Typography color={color}>{ message }</Typography>
     } else {
@@ -88,4 +89,3 @@ const QuestionDisplay = ({
 };
 
 export default QuestionDisplay;
-// workitem prevent appearance of elements from increasing space awkwardly

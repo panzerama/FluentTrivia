@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import QuestionProvider from './QuestionsProvider';
 import AnswerResponse from './types/AnswerResponse';
-import QuestionResponse from './types/QuestionResponse';
+import { QuestionResponse } from './types/QuestionResponse';
 
 const app: express.Application = express()
 app.use(parser.json())

@@ -1,7 +1,6 @@
-
 type Answer = {
-    description: string,
-    correct: boolean
-  }
+  description: string,
+  correct: boolean
+}
 
 export { Answer }
