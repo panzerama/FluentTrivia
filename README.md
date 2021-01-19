@@ -8,7 +8,7 @@ Thanks for the opportunity to complete the interview.
 - *MongoDB*
 - *Typescript*
 
-## Improvements
+## Future Improvements
 - The OpenTrivia API returns question and answer text with HTML character encodings which should be displayed as their respective characters.
 - Improve POC UI layout and elements.
 - Gracefully handle reaching the end of questions in category set.
